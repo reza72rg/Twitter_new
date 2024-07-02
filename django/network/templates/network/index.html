@@ -1,0 +1,52 @@
+{% extends "network/layout.html" %}
+{% load static %}
+{% load like_extra %}
+
+{% block body %}
+    <h2>{{ page_title }}</h2>
+
+    <div class="border p-3" id="new-post">
+        <form action="new_post/" method="post" onsubmit="formSubmitter(event)">
+            <label for="new-post-content">Make a new tweet</label>
+            <textarea required
+                      class="form-control mb-2"
+                      id="new-post-content"
+                      name="post_content"
+                      rows="2"
+                      placeholder="what are you thinking?!"></textarea>
+            <button type="submit" class="btn btn-primary">Share</button>
+        </form>
+    </div>
+    <div id="all-posts">
+        {% for post in posts %}
+            <div class="post border my-3 p-3">
+                <div>
+                    <h5>
+                        <a href="{% url 'profile_view' post.owner.username %}">{{ post.owner.username }}</a>
+                    </h5>
+                    <small style="float: right;">{{ post.create_date }}</small>
+                </div>
+                <p>{{ post.text }}</p>
+
+               {% if user.is_authenticated %}
+                    {% is_like user post as is_user_like_this %}
+                    {% if is_user_like_this %}
+                        <i class="bi bi-heart-fill like-button" style="color: #dc3545" title="unlike"
+                           data-id="{{ post.id }}"></i>
+                    {% else %}
+                        <i class="bi bi-heart like-button" title="like" data-id="{{ post.id }}"></i>
+                    {% endif %}
+                {% endif %}
+                <small class="like-count">{{ post.likes.count }}</small>
+                <small>Likes</small>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% include 'network/pagination.html' with page=page_obj %}
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/submitter.js' %}"></script>
+    <script src="{% static 'network/like.js' %}"></script>
+{% endblock %}

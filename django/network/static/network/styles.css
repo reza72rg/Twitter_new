@@ -1,0 +1,16 @@
+.post h5 {
+    display: inline;
+}
+
+.nav-link {
+    cursor: pointer;
+}
+
+.edit-post {
+    cursor: pointer;
+}
+
+#brand-description {
+    font-size: 15px;
+    color: rgba(0, 0, 0, .5);
+}
